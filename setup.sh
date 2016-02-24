@@ -11,3 +11,4 @@ python tree.py
 
 # Create directory for saved models
 mkdir models
+mkdir logs

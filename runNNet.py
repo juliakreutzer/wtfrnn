@@ -83,7 +83,7 @@ def run(args=None):
     dev_accuracies = []
     dev_rootAccuracies = []
     # load training data
-    trees = tr.loadTrees('train.full.15',wordMap=wordMap)[:opts.maxTrain] #train.full.15
+    trees = tr.loadTrees('train',wordMap=wordMap)[:opts.maxTrain] #train.full.15
     if opts.maxTrain > -1:
         print "Training only on %d trees" % opts.maxTrain
     opts.numWords = len(tr.loadWordMap())
@@ -106,7 +106,7 @@ def run(args=None):
         optimizer=opts.optimizer)
 
 
-    dev_trees = tr.loadTrees("dev.full.15") #dev.full.15
+    dev_trees = tr.loadTrees("dev") #dev.full.15
     for e in range(opts.epochs):
         start = time.time()
         print "Running epoch %d"%e
