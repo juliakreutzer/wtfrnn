@@ -21,9 +21,6 @@ from gensim import models
 # You should update run.sh accordingly before you run it!
 
 
-# TODO:
-# Create your plots here
-
 def run(args=None):
     usage = "usage : %prog [options]"
     parser = optparse.OptionParser(usage=usage)
@@ -49,7 +46,7 @@ def run(args=None):
         default="models/test.bin")
     parser.add_option("--data",dest="data",type="string",default="train")
 
-    parser.add_option("--model",dest="model",type="string",default="RNN")
+    parser.add_option("--model",dest="model",type="string",default="RNTN")
 
     parser.add_option("--maxTrain",dest="maxTrain", type="int", default=-1)
     parser.add_option("--activation",dest="acti", type="string", default="tanh")
@@ -95,8 +92,6 @@ def run(args=None):
     if (opts.model=='RNTN'):
         nn = RNTN(wvecDim=opts.wvecDim,outputDim=opts.outputDim,numWords=opts.numWords,
                   mbSize=opts.minibatch,rho=opts.rho, acti=opts.acti, init=opts.init, partial=opts.partial)
-    elif(opts.model=='RNN'):
-        nn = RNN(opts.wvecDim,opts.outputDim,opts.numWords,opts.minibatch)
     else:
         raise '%s is not a valid neural network so far only RNTN, RNN'%opts.model
     
@@ -120,14 +115,14 @@ def run(args=None):
             nn.toFile(fid)
         if evaluate_accuracy_while_training:
             print "testing on training set"
-            acc, sacc = test(opts.outFile,"train",opts.model,trees)
+            acc, sacc = test(opts.outFile,"train",opts.model,trees, acti=opts.acti)
             train_accuracies.append(acc)
             train_rootAccuracies.append(sacc)
             print "testing on dev set"
-            dacc, dsacc = test(opts.outFile,"dev",opts.model,dev_trees)
+            dacc, dsacc = test(opts.outFile,"dev",opts.model,dev_trees, acti=opts.acti)
             dev_accuracies.append(dacc)
             dev_rootAccuracies.append(dsacc)
-            # clear the fprop flags in trees and dev_trees
+            # clear the fprop flags and dev_trees
             for tree in trees:
                 tr.leftTraverse(tree.root,nodeFn=tr.clearFprop)
             for tree in dev_trees:
@@ -178,7 +173,7 @@ def readW2v(w2v,wvDim):
         wordMap["UNK"] = len(matrix)
     return matrix, wordMap
 
-def test(netFile,dataSet, model='RNN', trees=None, confusion_matrix_file=None):
+def test(netFile,dataSet, model='RNN', trees=None, confusion_matrix_file=None, acti=None):
     if trees==None:
         trees = tr.loadTrees(dataSet)
     assert netFile is not None, "Must give model to test"
@@ -188,7 +183,7 @@ def test(netFile,dataSet, model='RNN', trees=None, confusion_matrix_file=None):
         _ = pickle.load(fid)
         
         if (model=='RNTN'):
-            nn = RNTN(wvecDim=opts.wvecDim,outputDim=opts.outputDim,numWords=opts.numWords,mbSize=opts.minibatch,rho=opts.rho, acti=opts.acti)
+            nn = RNTN(wvecDim=opts.wvecDim,outputDim=opts.outputDim,numWords=opts.numWords,mbSize=opts.minibatch,rho=opts.rho, acti=acti)
         elif(model=='RNN'):
             nn = RNN(opts.wvecDim,opts.outputDim,opts.numWords,opts.minibatch)
         else:
