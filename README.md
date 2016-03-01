@@ -9,7 +9,7 @@ On top of this model, I built a number of modifications that allowed to further 
 2. transform sentences into a general tree format to train the RNTN model on un-parsed sentences (`fromTextToFullTree.py`)
 3. training models without phrase-based annotations (training option `--partial`)
 
-To train a model, use `run.sh` with the parameters listed in `runNNet.py`. To test a model, use `test.sh` accordingly. Models are stored as pickle objects. Before running the code, execute `setup.sh` to download the data and create directories and build trees. The input to the trained model (full trees or dependency trees) has to be defined in `runNNet.py`.
+To train a model, use `run.sh` with the parameters listed in `runNNet.py`. To test a model, use `test.sh` accordingly. Models are stored as pickle objects. Before running the code, execute `setup.sh` to download the data and create directories and build trees. The input to the trained model and the development set (full trees or dependency trees) have to be defined in `runNNet.py` in lines 84 and 103.
 
 
 [1] Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank, Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Chris Manning, Andrew Ng and Chris Potts. 
